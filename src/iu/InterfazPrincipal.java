@@ -9,8 +9,7 @@ import util.LetraUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class InterfazPrincipal extends JFrame {
@@ -172,6 +171,14 @@ public class InterfazPrincipal extends JFrame {
             JOptionPane.showMessageDialog(this, "Dibujo entrenado como letra " + letra, "Entrenando como letra " + letra, JOptionPane.PLAIN_MESSAGE);
 
             panelDibujo.clear();
+        });
+
+        panelDibujo.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+        panelDibujo.getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+            public void actionPerformed(ActionEvent ae)
+            {
+                btnEntrenar.doClick();
+            }
         });
     }
 
