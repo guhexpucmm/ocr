@@ -31,7 +31,7 @@ public class Conexion {
         return salidas;
     }
 
-    public void ajustarSalario(ArrayList<Integer> buenasSalidas) {
+    public void ajustarSalario(ArrayList<Double> buenasSalidas) {
         for (int i = 0; i < neuronas.size(); i++) {
             double delta = buenasSalidas.get(i) - neuronas.get(i).getSalida();
 

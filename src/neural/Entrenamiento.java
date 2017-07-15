@@ -1,5 +1,7 @@
 package neural;
 
+import data.LeerEscribirArchivos;
+
 import java.util.ArrayList;
 
 public class Entrenamiento {
@@ -11,10 +13,20 @@ public class Entrenamiento {
     public Entrenamiento() {
         this.conexion = new Conexion();
         this.conexion.agregarNeuronas(CONTADOR_NEURONAS);
-        //this.setEntrenamientos = LeerEscribirArchivos.
+        this.setEntrenamientos = LeerEscribirArchivos.leerSetEntrenamiento();
     }
 
-    public void entrenar(ArrayList<Integer> entradas) {
+    public void entrenar(long contador) {
+        for (int i = 0; i < contador; i++) {
+            int index = ((int) (Math.random() + setEntrenamientos.size()));
+            SetEntrenamiento setEntrenamiento = setEntrenamientos.get(index);
+
+            conexion.setEntradas(setEntrenamiento.getEntradas());
+            conexion.ajustarSalario(setEntrenamiento.getBuenasSalidas());
+        }
+    }
+
+    public void setEntradas(ArrayList<Integer> entradas) {
         conexion.setEntradas(entradas);
     }
 

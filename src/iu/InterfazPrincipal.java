@@ -2,9 +2,12 @@ package iu;
 
 import iu.componentes.PanelDibujo;
 import neural.Entrenamiento;
+import util.LetraUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 
 public class InterfazPrincipal extends JFrame {
     private final int RESOLUCION = 20;
@@ -36,9 +39,11 @@ public class InterfazPrincipal extends JFrame {
 
         setClicks();
 
+        inicializandoComponentes();
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        setSize(new Dimension(1000, 485));
+        setSize(new Dimension(1200, 485));
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -67,9 +72,10 @@ public class InterfazPrincipal extends JFrame {
         panel.setPreferredSize(new Dimension(1200, 36));
 
         spinnerCantidad = new JSpinner();
+        spinnerCantidad.setModel(new SpinnerNumberModel(0, 0, Double.MAX_VALUE, 1));
         setSize(spinnerCantidad);
 
-        btnEntrenarXVeces = new JButton("Entrenar X Veces");
+        btnEntrenarXVeces = new JButton("Entrenar X veces");
         setSize(btnEntrenarXVeces);
         btnEntrenarXVeces.setBackground(Color.WHITE);
 
@@ -82,6 +88,9 @@ public class InterfazPrincipal extends JFrame {
         btnBorrar.setBackground(Color.WHITE);
 
         comboBoxLetras = new JComboBox<>();
+        for (int i = 0; i < LetraUtil.letras.size(); i++) {
+            comboBoxLetras.addItem(LetraUtil.letras.get(i));
+        }
         setSize(comboBoxLetras);
         comboBoxLetras.setBackground(Color.WHITE);
 
@@ -100,12 +109,55 @@ public class InterfazPrincipal extends JFrame {
     }
 
     private void setClicks() {
+        spinnerCantidad.addChangeListener(e -> {
+            btnEntrenarXVeces.setText("Entrenar " + spinnerCantidad.getModel().getValue() + " veces");
+        });
 
+        spinnerCantidad.addInputMethodListener(new InputMethodListener() {
+            @Override
+            public void inputMethodTextChanged(InputMethodEvent event) {
+                btnEntrenarXVeces.setText("Entrenar " + spinnerCantidad.getModel().getValue() + " veces");
+            }
+
+            @Override
+            public void caretPositionChanged(InputMethodEvent event) {
+                btnEntrenarXVeces.setText("Entrenar " + spinnerCantidad.getModel().getValue() + " veces");
+            }
+        });
+
+        btnEntrenarXVeces.addActionListener(e -> {
+            Number numero = (Number) spinnerCantidad.getModel().getValue();
+
+            entrenamiento.entrenar(numero.intValue());
+
+            JOptionPane.showMessageDialog(panelPrincipal, "Modelo entrenado " + spinnerCantidad.getModel().getValue() + " veces!");
+        });
+
+        btnPredecir.addActionListener(e -> {
+
+        });
+
+        btnBorrar.addActionListener(e -> {
+            panelDibujo.clear();
+        });
+
+        comboBoxLetras.addActionListener(e -> {
+            btnEntrenar.setText("Entrenar como letra " + comboBoxLetras.getSelectedItem().toString());
+        });
+
+        btnEntrenar.addActionListener(e -> {
+
+        });
+    }
+
+    private void inicializandoComponentes() {
+        btnEntrenarXVeces.setText("Entrenar " + spinnerCantidad.getModel().getValue() + " veces");
+        btnEntrenar.setText("Entrenar como letra " + comboBoxLetras.getSelectedItem().toString());
     }
 
     private void setSize(JComponent component) {
         Dimension prefSize = component.getPreferredSize();
-        prefSize = new Dimension(150, 25);
+        prefSize = new Dimension(180, 25);
         component.setPreferredSize(prefSize);
     }
 }
