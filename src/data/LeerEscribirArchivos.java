@@ -50,12 +50,25 @@ public class LeerEscribirArchivos {
     public static void guardarEnArchivo(ArrayList<Integer> input, String filename) {
         try {
             File file = new File("resources/" + filename + ".txt");
+            File file2 = new File("resources/" + filename + ".arff");
+
             PrintWriter pw = new PrintWriter(new FileOutputStream(file, true));
+            PrintWriter pa = new PrintWriter(new FileOutputStream(file2, true));
+
+            int cont = 0;
+
             for (Integer i : input) {
                 pw.write(Integer.toString(i));
+                pa.write(Integer.toString(i));
+                if(cont % 20 == 0) pa.write(",");
+                cont++;
             }
+            pa.write(filename);
             pw.write("\n");
+            pa.write("\n");
+
             pw.close();
+            pa.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

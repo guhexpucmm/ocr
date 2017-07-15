@@ -17,7 +17,7 @@ public class Entrenamiento {
     }
 
     public void entrenar(long contador) {
-        for (int i = 0; i < contador; i++) {
+        for (long i = 0; i < contador; i++) {
             int index = ((int) (Math.random() + setEntrenamientos.size()));
             SetEntrenamiento setEntrenamiento = setEntrenamientos.get(index);
 

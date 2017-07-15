@@ -1,13 +1,17 @@
 package iu;
 
+import data.LeerEscribirArchivos;
+import data.SalidasValidas;
 import iu.componentes.PanelDibujo;
 import neural.Entrenamiento;
+import neural.SetEntrenamiento;
 import util.LetraUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
+import java.util.ArrayList;
 
 public class InterfazPrincipal extends JFrame {
     private final int RESOLUCION = 20;
@@ -134,7 +138,20 @@ public class InterfazPrincipal extends JFrame {
         });
 
         btnPredecir.addActionListener(e -> {
+            entrenamiento.setEntradas(panelDibujo.getPixeles());
 
+            ArrayList<Double> salidas = entrenamiento.getSalidas();
+            int index = 0;
+
+            for (int i = 0; i < salidas.size(); i++) {
+                if(salidas.get(i) > salidas.get(index)) {
+                    index = i;
+                }
+            }
+
+            actualizarPredicciones();
+
+            System.out.println("" + (char) index + 65);
         });
 
         btnBorrar.addActionListener(e -> {
@@ -146,7 +163,15 @@ public class InterfazPrincipal extends JFrame {
         });
 
         btnEntrenar.addActionListener(e -> {
+            String letra = (String) comboBoxLetras.getSelectedItem();
 
+            entrenamiento.agregarSetEntrenamiento(new SetEntrenamiento(panelDibujo.getPixeles(), SalidasValidas.getInstance().getSalidasValidas(letra)));
+
+            LeerEscribirArchivos.guardarEnArchivo(panelDibujo.getPixeles(), letra);
+
+            JOptionPane.showMessageDialog(this, "Dibujo entrenado como letra " + letra, "Entrenando como letra " + letra, JOptionPane.PLAIN_MESSAGE);
+
+            panelDibujo.clear();
         });
     }
 
@@ -159,5 +184,28 @@ public class InterfazPrincipal extends JFrame {
         Dimension prefSize = component.getPreferredSize();
         prefSize = new Dimension(180, 25);
         component.setPreferredSize(prefSize);
+    }
+
+    private void actualizarPredicciones() {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<Double> outputs = entrenamiento.getSalidas();
+        for (int i = 0; i < outputs.size(); i++) {
+            int letterValue = i + 65;
+            sb.append((char) letterValue);
+            double value = outputs.get(i);
+            if (value < 0.01)
+                value = 0;
+            if (value > 0.99)
+                value = 1;
+
+            value *= 1000;
+            int x = (int) (value);
+            value = x / 1000.0;
+
+            sb.append("\t " + value);
+            sb.append("\n");
+        }
+
+        System.out.println(sb);
     }
 }
