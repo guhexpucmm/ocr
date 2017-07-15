@@ -6,6 +6,14 @@ import iu.componentes.PanelDibujo;
 import neural.Entrenamiento;
 import neural.SetEntrenamiento;
 import util.LetraUtil;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.core.DenseInstance;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import weka.classifiers.meta.FilteredClassifier;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToNominal;
 
 import javax.swing.*;
 import java.awt.*;
@@ -148,9 +156,53 @@ public class InterfazPrincipal extends JFrame {
                 }
             }
 
-            actualizarPredicciones();
+            try{
+                DataSource source = new DataSource("resources/ocr.arff");
+                Instances data = source.getDataSet();
 
-            System.out.println("" + (char) index + 65);
+                if (data.classIndex() == -1)
+                    data.setClassIndex(data.numAttributes() - 1);
+
+                NaiveBayes bayes = new NaiveBayes();
+                bayes.setBatchSize("100");
+
+                FilteredClassifier fc = new FilteredClassifier();
+                fc.setClassifier(bayes);
+
+                Instance inst = new DenseInstance(data.numAttributes());
+                inst.setDataset(data);
+
+                String valoresSet = new String();
+                int cont = 1;
+                for(Integer i : panelDibujo.getPixeles()){
+                    valoresSet += i.toString();
+                    if(cont % 20 == 0) valoresSet += ",";
+                    cont++;
+                }
+
+                valoresSet += "Z";
+
+                String[] valores = valoresSet.split(",");
+                for(int i = 0; i < data.numAttributes(); i++){
+                    inst.setValue(i, valores[i]);
+                }
+                data.add(inst);
+
+                String[] options = new String[2];
+                options[0] = "-R";
+                options[1] = "first-last";
+                StringToNominal stn = new StringToNominal();
+                stn.setOptions(options);
+                stn.setInputFormat(data);
+                Instances newData = Filter.useFilter(data, stn);
+
+                fc.buildClassifier(newData);
+
+                double pred = fc.classifyInstance(newData.instance(newData.numInstances() - 1));
+                System.out.println(newData.classAttribute().value((int) pred));
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         btnBorrar.addActionListener(e -> {
