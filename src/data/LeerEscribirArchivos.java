@@ -50,12 +50,18 @@ public class LeerEscribirArchivos {
     public static void guardarEnArchivo(ArrayList<Integer> input, String filename) {
         try {
             File file = new File("resources/" + filename + ".txt");
-            File file2 = new File("resources/" + filename + ".arff");
+            File file2 = new File("resources/ocr.arff");
+
+
 
             PrintWriter pw = new PrintWriter(new FileOutputStream(file, true));
             PrintWriter pa = new PrintWriter(new FileOutputStream(file2, true));
 
-            int cont = 0;
+            if(file2.length() == 0){
+                escribirAtributos(pa);
+            }
+
+            int cont = 1;
 
             for (Integer i : input) {
                 pw.write(Integer.toString(i));
@@ -72,5 +78,15 @@ public class LeerEscribirArchivos {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void escribirAtributos(PrintWriter pa){
+        pa.write("@relation ocr\n\n");
+        for(int i=1;i<=20;i++){
+            pa.write("@attribute fila" + i + " string\n");
+        }
+
+        pa.write("@attribute class {A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z}\n\n");
+        pa.write("@data\n");
     }
 }
