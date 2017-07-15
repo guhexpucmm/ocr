@@ -71,18 +71,23 @@ public class InterfazPrincipal extends JFrame {
 
         btnEntrenarXVeces = new JButton("Entrenar X Veces");
         setSize(btnEntrenarXVeces);
+        btnEntrenarXVeces.setBackground(Color.WHITE);
 
         btnPredecir = new JButton("Predecir letra");
         setSize(btnPredecir);
+        btnPredecir.setBackground(Color.WHITE);
 
         btnBorrar = new JButton("Borrar");
         setSize(btnBorrar);
+        btnBorrar.setBackground(Color.WHITE);
 
         comboBoxLetras = new JComboBox<>();
         setSize(comboBoxLetras);
+        comboBoxLetras.setBackground(Color.WHITE);
 
         btnEntrenar = new JButton("Entrenar como letra");
         setSize(btnEntrenar);
+        btnEntrenar.setBackground(Color.WHITE);
 
         panel.add(spinnerCantidad);
         panel.add(btnEntrenarXVeces);
