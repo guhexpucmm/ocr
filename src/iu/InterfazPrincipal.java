@@ -38,14 +38,14 @@ public class InterfazPrincipal extends JFrame {
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        setSize(new Dimension(1000, 600));
+        setSize(new Dimension(1000, 485));
         setLocationRelativeTo(null);
         setResizable(false);
     }
 
     private void setPanelPrincipal() {
         panelPrincipal = new JPanel();
-        panelPrincipal.setBackground(Color.WHITE);
+        panelPrincipal.setBackground(Color.LIGHT_GRAY);
         setContentPane(panelPrincipal);
     }
 
@@ -63,8 +63,8 @@ public class InterfazPrincipal extends JFrame {
 
     private void setBottomSide() {
         JPanel panel = new JPanel();
-        panel.setBackground(Color.LIGHT_GRAY);
-        panel.setPreferredSize(new Dimension(1200, 50));
+        panel.setBackground(Color.WHITE);
+        panel.setPreferredSize(new Dimension(1200, 36));
 
         spinnerCantidad = new JSpinner();
         setSize(spinnerCantidad);

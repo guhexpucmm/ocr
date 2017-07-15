@@ -44,7 +44,7 @@ public class PanelCustomizado extends JPanel {
     }
 
     private void generarSecciones(Graphics g) {
-        g.setColor(Color.BLACK);
+        g.setColor(Color.LIGHT_GRAY);
 
         for(Seccion seccion : secciones) {
             g.drawLine(0, seccion.getY(), w, seccion.getY());
