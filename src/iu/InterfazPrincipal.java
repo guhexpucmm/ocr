@@ -6,6 +6,7 @@ import iu.componentes.PanelDibujo;
 import neural.Entrenamiento;
 import neural.SetEntrenamiento;
 import util.LetraUtil;
+import weka.AlgoritmoNaiveBayes;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -145,63 +146,13 @@ public class InterfazPrincipal extends JFrame {
         });
 
         btnPredecir.addActionListener(e -> {
-            entrenamiento.setEntradas(panelDibujo.getPixeles());
+            if(!panelDibujo.isVacio()) {
+                AlgoritmoNaiveBayes algoritmoNaiveBayes = new AlgoritmoNaiveBayes();
+                algoritmoNaiveBayes.ejecutarAlgortimo(panelPrincipal, panelDibujo.getPixeles());
 
-            ArrayList<Double> salidas = entrenamiento.getSalidas();
-            int index = 0;
-
-            for (int i = 0; i < salidas.size(); i++) {
-                if(salidas.get(i) > salidas.get(index)) {
-                    index = i;
-                }
-            }
-
-            try{
-                DataSource source = new DataSource("resources/ocr.arff");
-                Instances data = source.getDataSet();
-
-                if (data.classIndex() == -1)
-                    data.setClassIndex(data.numAttributes() - 1);
-
-                NaiveBayes bayes = new NaiveBayes();
-                bayes.setBatchSize("100");
-
-                FilteredClassifier fc = new FilteredClassifier();
-                fc.setClassifier(bayes);
-
-                Instance inst = new DenseInstance(data.numAttributes());
-                inst.setDataset(data);
-
-                String valoresSet = new String();
-                int cont = 1;
-                for(Integer i : panelDibujo.getPixeles()){
-                    valoresSet += i.toString();
-                    if(cont % 20 == 0) valoresSet += ",";
-                    cont++;
-                }
-
-                valoresSet += "Z";
-
-                String[] valores = valoresSet.split(",");
-                for(int i = 0; i < data.numAttributes(); i++){
-                    inst.setValue(i, valores[i]);
-                }
-                data.add(inst);
-
-                String[] options = new String[2];
-                options[0] = "-R";
-                options[1] = "first-last";
-                StringToNominal stn = new StringToNominal();
-                stn.setOptions(options);
-                stn.setInputFormat(data);
-                Instances newData = Filter.useFilter(data, stn);
-
-                fc.buildClassifier(newData);
-
-                double pred = fc.classifyInstance(newData.instance(newData.numInstances() - 1));
-                System.out.println(newData.classAttribute().value((int) pred));
-            }catch (Exception ex) {
-                ex.printStackTrace();
+                panelDibujo.clear();
+            } else {
+                JOptionPane.showMessageDialog(panelPrincipal, "No hay ninguna letra dibujada, no se puede predecir. Dibuje!", "Error!", JOptionPane.ERROR_MESSAGE);
             }
         });
 

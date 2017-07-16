@@ -82,6 +82,20 @@ public class PanelCustomizado extends JPanel {
         repaint();
     }
 
+    public boolean isVacio() {
+        int cont = 0;
+
+        for (Seccion seccion : secciones) {
+            if (seccion.isActivo() == false)
+                cont++;
+        }
+
+        if (cont == secciones.size())
+            return true;
+        else
+            return false;
+    }
+
     public void dibujarLetra(ArrayList<Integer> pixeles) {
         for (int i = 0; i < pixeles.size(); i++) {
             if (pixeles.get(i) == 1)
